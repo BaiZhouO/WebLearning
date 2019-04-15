@@ -19,5 +19,5 @@ public String getPasswd(){                               <br>
 return passwd;                                           <br>
 }                                                        <br>
 }                                                        <br>
-编写简单的<form>提交name, passwd参数给get.jsp。            <br>
+编写简单的/<form>提交name, passwd参数给get.jsp。            <br>
 使用< jsp:useBean class= "bb.MyBean" id= "bean" />编写get.jsp获取并显示name, passwd参数。  <br>
