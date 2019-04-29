@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为UserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.BuyingSystem.dao.OrderDao">
+    <insert id="insertOrder" parameterType="Order">
+        INSERT INTO orderlist(cus_id, prod_id, prod_count, price, status, submit_date, handle_date, sendAddress)VALUES (#{order.cus_id},#{order.prod_id},#{order.prod_count},#{order.price},#{order.status},#{order.submit_date},#{order.handle_date},#{order.sendAddress})
+    </insert>
+
+    <delete id="deleteOrder" parameterType="int">
+        DELETE FROM orderlist WHERE order_id=#{order_id}
+    </delete>
+
+    <update id="updateOrder" parameterType="Order">
+        UPDATE orderlist
+        <set>
+            status = #{order_new.status},
+            handle_date = #{order_new.handle_date}
+        </set>
+        where order_id = #{order_new.order_id}
+    </update>
+
+    <select id="selectOrderById" resultType="Order" parameterType="int">
+        select * from orderlist where order_id = #{order_id}
+    </select>
+
+    <select id="selectAll" resultType="Order">
+        select * from orderlist order by order_id desc
+    </select>
+
+    <select id="selectOrderByName" parameterType="java.lang.String" resultType="Order">
+        select * from orderlist where prod_name = #{prod_name}
+    </select>
+
+    <select id="selectOrderCount" resultType="int">
+        select count(*) from orderlist
+    </select>
+
+
+    <select id="listByCusId" resultType="com.BuyingSystem.common.vo.OrderVO">
+        SELECT
+        *
+        FROM
+        orderlist
+        <where>
+            1=1
+            <if test="cus_id != null">
+                AND(
+                cus_id = #{cus_id}
+                )
+            </if>
+            <if test="search != null">
+                AND(
+                Product_prod_id LIKE '%'#{search}'%'
+                OR prod_name LIKE '%'#{search}'%'
+                )
+            </if>
+            <if test="pageInfo.sort != null">
+                ORDER BY ${pageInfo.sort} ${pageInfo.order}
+            </if>
+        </where>
+    </select>
+    <select id="listByPage" resultType="com.BuyingSystem.common.vo.OrderVO">
+        SELECT
+        *
+        FROM
+        orderlist
+        <where>
+            1=1
+            <if test="search != null">
+                AND(
+                Product_prod_id LIKE '%'#{search}'%'
+                OR prod_name LIKE '%'#{search}'%'
+                )
+            </if>
+            <if test="pageInfo.sort != null">
+                ORDER BY ${pageInfo.sort} ${pageInfo.order}
+            </if>
+        </where>
+    </select>
+
+    <!--<select id="findFinalPrice" resultType="double">
+        SELECT sum(total_price) from orderlist
+    </select>-->
+</mapper>

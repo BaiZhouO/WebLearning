@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为UserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.BuyingSystem.dao.OrderCartDao">
+    <insert id="insertOrderCart" parameterType="Cart">
+        INSERT INTO ordercart(Product_prod_id,prod_name,total_price,total_count,cus_id) values (#{cart.Product_prod_id},#{cart.prod_name},#{cart.total_price},#{cart.total_count},#{cart.cus_id})
+    </insert>
+
+    <delete id="deleteOrderCart" parameterType="int">
+        DELETE FROM ordercart WHERE Product_prod_id=#{Product_prod_id}
+    </delete>
+
+    <update id="updateOrderCart" parameterType="Cart">
+        UPDATE ordercart
+        <set>
+            total_price = #{cart_new.total_price},
+            total_count = #{cart_new.total_count}
+        </set>
+        where Product_prod_id = #{cart_new.Product_prod_id}
+    </update>
+
+    <update id="updateOrderCartByTwoIds" parameterType="Cart">
+        UPDATE ordercart
+        <set>
+            total_price = #{cart_new2.total_price},
+            total_count = #{cart_new2.total_count}
+        </set>
+        where Product_prod_id = #{cart_new2.Product_prod_id} AND cus_id = #{cart_new2.cus_id}
+    </update>
+
+    <select id="selectOrderCartById" resultType="Cart" parameterType="int">
+        select * from ordercart where Product_prod_id = #{Product_prod_id}
+    </select>
+
+    <select id="selectOrderCartByTwoIds" resultType="Cart">
+        select * from ordercart where Product_prod_id = #{Product_prod_id} AND cus_id = #{cus_id}
+    </select>
+
+
+
+    <select id="selectAll" resultType="Cart">
+        select * from ordercart order by Product_prod_id desc
+    </select>
+
+    <select id="selectOrderCartByName" parameterType="java.lang.String" resultType="Cart">
+        select * from ordercart where prod_name = #{prod_name}
+    </select>
+
+    <select id="selectOrderCartCount" resultType="int">
+        select sum(total_count) from ordercart
+    </select>
+
+
+
+    <select id="listByPage" resultType="com.BuyingSystem.common.vo.CartVO">
+        SELECT
+        *
+        FROM
+        ordercart
+        <where>
+            1=1
+            <if test="cus_id !=null">
+                AND(
+                cus_id = #{cus_id}
+                )
+            </if>
+            <if test="search != null">
+                AND(
+                Product_prod_id LIKE '%'#{search}'%'
+                OR prod_name LIKE '%'#{search}'%'
+                )
+            </if>
+            <if test="pageInfo.sort != null">
+                ORDER BY ${pageInfo.sort} ${pageInfo.order}
+            </if>
+        </where>
+    </select>
+
+    <select id="findFinalPrice" resultType="double">
+        SELECT sum(total_price) from ordercart
+    </select>
+
+    <select id="findRecords" resultType="int">
+        select count(*) from ordercart
+    </select>
+</mapper>

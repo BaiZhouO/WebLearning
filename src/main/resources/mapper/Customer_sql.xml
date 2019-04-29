@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为UserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.BuyingSystem.dao.CustomerDao">
+    <insert id="insertCustomer" parameterType="Customer">
+        INSERT INTO customer(loginName, loginPassword, cus_name, cus_phone, cus_address, sex, email, RegisterTime) values (#{customer.loginName},#{customer.loginPassword},#{customer.cus_name},#{customer.cus_phone},#{customer.cus_address},#{customer.sex},#{customer.email},#{customer.RegisterTime})
+    </insert>
+
+    <delete id="deleteCustomer" parameterType="int">
+        DELETE FROM customer WHERE cus_id=#{id}
+    </delete>
+
+    <update id="updateCustomer" parameterType="Customer">
+        UPDATE customer
+        <set>
+            cus_name = #{customer_new.cus_name},
+            cus_phone = #{customer_new.cus_phone},
+            cus_address = #{customer_new.cus_address},
+            sex = #{customer_new.sex},
+            email = #{customer_new.email}
+        </set>
+        where cus_id = #{customer_new.cus_id}
+    </update>
+
+    <select id="selectCustomerById" resultType="Customer" parameterType="int">
+        select * from customer where cus_id = #{cus_id}
+    </select>
+
+    <select id="selectAll" resultType="Customer">
+        select * from customer order by cus_id desc
+    </select>
+
+    <select id="selectCustomerByName" parameterType="java.lang.String" resultType="Customer">
+        select * from customer where loginName = #{loginName}
+    </select>
+
+    <select id="selectCustomerCount" resultType="int">
+        select count(*) from customer
+    </select>
+</mapper>

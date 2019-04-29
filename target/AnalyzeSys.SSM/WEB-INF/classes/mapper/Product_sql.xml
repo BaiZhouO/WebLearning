@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为UserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.BuyingSystem.dao.ProductDao">
+    <insert id="insertProduct" parameterType="Product">
+        INSERT INTO product(prod_name, prod_price, prod_description,prod_pic_dir) VALUES (#{product.prod_name},#{product.prod_price},#{product.prod_description},#{product.prod_pic_dir})
+    </insert>
+
+    <delete id="deleteProduct" parameterType="int">
+        DELETE FROM product WHERE prod_id=#{prod_id}
+    </delete>
+
+    <update id="updateProduct" parameterType="Product">
+        UPDATE product
+        <set>
+            prod_name = #{product_new.prod_name},
+            prod_price = #{product_new.prod_price},
+            prod_description = #{product_new.prod_description},
+            prod_pic_dir = #{product_new.prod_pic_dir}
+        </set>
+        where prod_id = #{product_new.prod_id}
+    </update>
+
+    <select id="selectProductById" resultType="Product" parameterType="int">
+        select * from product where prod_id = #{prod_id}
+    </select>
+
+    <select id="selectAll" resultType="Product">
+        select * from product order by prod_id desc
+    </select>
+
+    <select id="selectProductByName" parameterType="java.lang.String" resultType="Product">
+        select * from product where prod_name = #{prod_name}
+    </select>
+
+    <select id="selectProductCount" resultType="int">
+        select count(*) from product
+    </select>
+</mapper>
